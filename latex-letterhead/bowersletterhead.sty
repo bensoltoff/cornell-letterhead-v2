@@ -1,0 +1,89 @@
+
+\NeedsTeXFormat{LaTeX2e}[2.09]
+%\ProvidesPackage{csletterhead}
+\RequirePackage[texcoord]{eso-pic}
+\RequirePackage{graphicx,palatino,sourcesanspro}
+%\usepackage[margin=1.0 in]{geometry}
+%\addtolength{\topmargin}{0.6in}
+\setlength{\footskip}{.5in}
+
+\DeclareOption{cornell}{\cornelltrue\cisfalse}
+\DeclareOption{cis}{\cistrue}
+\DeclareOption{cs}{\cstrue\cisfalse}
+\DeclareOption{is}{\istrue\cisfalse}
+\DeclareOption{sds}{\sdstrue\cisfalse}
+
+\newif\ifcis
+\newif\ifcornell
+\newif\ifcs
+\newif\ifis
+\newif\ifsds
+
+\cistrue
+
+\ProcessOptions
+
+\newcommand\myphonenumber[1]{\def\@myphonenumber{#1}}
+\newcommand\myroomnumber[1]{\def\@myroomnumber{#1}}
+\newcommand\myname[1]{\def\@myname{\textbf{#1}}}
+\newcommand\mytitle[1]{\def\@mytitle{#1}}
+\newcommand\myemail[1]{\def\@myemail{#1}}
+\newcommand\mywebsite[1]{\def\@mywebsite{#1}}
+\newcommand\faxnumber{+1 (607) 255-9143}
+
+\newcommand{\letterheadfont}{\sf}
+
+\AtBeginDocument{
+\AddToShipoutPicture*{
+\put(15,-120){
+\makebox(0,0)[l]{
+\begin{tabular}{p{3.9in}p{1.1in}r}
+\ifcis
+\hspace{.8in}
+\includegraphics[width=3.5in]{Bowers.png}
+\else
+\ifcornell
+\hspace{0.8in}
+\includegraphics[width=3.5in]{CornellLogoRed}
+\else
+\ifis
+\hspace{0.8in}
+\includegraphics[width=3.5in]{Bowers_InformationScience.png}
+\else
+\ifsds
+\hspace{0.8in}
+\includegraphics[width=3.5in]{Bowers_StatisticsDataScience.png}
+\else
+\ifcs
+\hspace{.8in}
+\includegraphics[width=3.5in]{Bowers_ComputerScience.png}
+\fi
+\fi
+\fi
+\fi
+\fi
+&
+&
+\begin{minipage}{3.6in}
+\letterheadfont
+\small
+\@myname \\
+\@mytitle \\
+\\
+\@myroomnumber \\
+Ithaca, NY 14853-7501 \\
+t: \@myphonenumber \\
+f: \faxnumber\\
+\ifx\@myemail\@undefined\relax\else email: \@myemail \\ \fi
+\ifx\@mywebsite\@undefined\relax\else \@mywebsite \\ \fi
+\end{minipage}
+\end{tabular}
+}
+}
+}
+}
+
+\makeatletter
+\renewcommand\date[1]{\gdef\@date{\ \vspace{1in}\\\hbox to \linewidth{#1\hss}}}
+\makeatother
+\date{\today}
