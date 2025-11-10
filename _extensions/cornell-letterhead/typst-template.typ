@@ -1,4 +1,3 @@
-
 // This is an example typst template (based on the default template that ships
 // with Quarto). It defines a typst function named 'article' which provides
 // various customization options. This function is called from the 
@@ -10,6 +9,56 @@
 //   - https://typst.app/docs/tutorial/making-a-template/
 //   - https://github.com/typst/templates
 
+
+#let divider(thickness: 0.5pt, color: luma(30), above: 0.7em) = {
+  // produce a visible horizontal rule as content
+  block(above: above)[ line(stroke: thickness, color: color, start: (0%,0%), end: (100%,0%)) ]
+}
+
+#let letterhead(
+  name: none,
+  title: none,
+  roomnumber: none,
+  phonenumber: none,
+  faxnumber: none,
+  email: none,
+  website: none,
+  logo: none,
+  lockup: none,
+  logo_width: 3.5in,
+) = {
+  // Determine logo path: explicit logo wins, otherwise map lockup keys to resources
+  let logo_path = if logo != none {
+    logo
+  } else if lockup == "is" {
+    "resources/Bowers_InformationScience.png"
+  } else if lockup == "cis" {
+    "resources/Bowers.png"
+  } else {
+    none
+  }
+
+  if name != none {
+    // produce content for the header using content expressions (no leading `#` tokens)
+    block[
+      grid(columns: (logo_width, 1fr), gap: 0.5em)[
+        (if logo_path != none { image(logo_path, width: logo_width) } else { vbox[] }),
+        align(right)[
+          text(weight: "bold")[ name ] \
+          if title != none { text()[ title ] } \
+          if roomnumber != none { text()[ roomnumber ] } \
+          text()[ "Ithaca, NY 14853-7501" ] \
+          if phonenumber != none { text()[ "t: " + phonenumber ] } \
+          if faxnumber != none { text()[ "f: " + faxnumber ] } \
+          if email != none { text()[ "email: " + email ] } \
+          if website != none { text()[ website ] }
+        ]
+      ]
+    ]
+    // separator rule -> produce content
+    divider()
+  }
+}
 
 #let article(
   title: none,
@@ -38,6 +87,19 @@
   toc_title: none,
   toc_depth: none,
   toc_indent: 1.5em,
+
+  // letterhead-specific params (Typst-safe names)
+  letter_name: none,
+  letter_title: none,
+  letter_roomnumber: none,
+  letter_phonenumber: none,
+  letter_faxnumber: none,
+  letter_email: none,
+  letter_website: none,
+  letter_logo: none,
+  letter_lockup: none,
+  letter_logo_width: 3.5in,
+
   doc,
 ) = {
   set page(
@@ -51,6 +113,7 @@
            font: font,
            size: fontsize)
   set heading(numbering: sectionnumbering)
+
   if title != none {
     align(center)[#block(inset: 2em)[
       #set par(leading: heading-line-height)
@@ -115,10 +178,29 @@
     ]
   }
 
-  if cols == 1 {
-    doc
+  // build the document body, prepending the letterhead content when provided
+  let body = if letter_name != none {
+    // call the letterhead function (returns content) and concatenate with doc
+    letterhead(
+      name: letter_name,
+      title: letter_title,
+      roomnumber: letter_roomnumber,
+      phonenumber: letter_phonenumber,
+      faxnumber: letter_faxnumber,
+      email: letter_email,
+      website: letter_website,
+      logo: letter_logo,
+      lockup: letter_lockup,
+      logo_width: letter_logo_width
+    ) + doc
   } else {
-    columns(cols, doc)
+    doc
+  }
+
+  if cols == 1 {
+    body
+  } else {
+    columns(cols, body)
   }
 }
 

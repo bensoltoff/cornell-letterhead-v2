@@ -1,4 +1,3 @@
-
 // Typst custom formats typically consist of a 'typst-template.typ' (which is
 // the source code for a typst template) and a 'typst-show.typ' which calls the
 // template's function (forwarding Pandoc metadata values as required)
@@ -59,27 +58,22 @@ $if(fontsize)$
 $elseif(brand.typography.base.size)$
   fontsize: $brand.typography.base.size$,
 $endif$
-$if(title)$
-$if(brand.typography.headings.family)$
-  heading-family: $brand.typography.headings.family$,
+
+// -- forward only safe letter metadata (avoid fields that Pandoc may escape) --
+$if(letter-name)$
+  letter_name: "$letter-name$",
 $endif$
-$if(brand.typography.headings.weight)$
-  heading-weight: $brand.typography.headings.weight$,
+$if(letter-logo)$
+  letter_logo: "$letter-logo$",
 $endif$
-$if(brand.typography.headings.style)$
-  heading-style: "$brand.typography.headings.style$",
+$if(letter-lockup)$
+  letter_lockup: "$letter-lockup$",
 $endif$
-$if(brand.typography.headings.color)$
-  heading-color: $brand.typography.headings.color$,
+$if(letter-logo-width)$
+  letter_logo_width: $letter-logo-width$,
 $endif$
-$if(brand.typography.headings.line-height)$
-  heading-line-height: $brand.typography.headings.line-height$,
-$endif$
-$endif$
-$if(section-numbering)$
-  sectionnumbering: "$section-numbering$",
-$endif$
-  pagenumbering: $if(page-numbering)$"$page-numbering$"$else$none$endif$,
+
+  pagenumbering: $if(page-numbering)$"$page-numbering"$else$none$endif$,
 $if(toc)$
   toc: $toc$,
 $endif$

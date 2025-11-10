@@ -9,3 +9,10 @@ contributes:
         - typst-template.typ
         - typst-show.typ
 
+# Resource files expected by the template.
+# Copy the following PNGs into _extensions/cornell-letterhead/resources/
+resources:
+  - resources/Bowers.png
+  - resources/Bowers_InformationScience.png
+  - resources/CornellLogoRed.png
+
